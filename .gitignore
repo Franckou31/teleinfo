@@ -1,0 +1,8 @@
+readme.txt
+docker-compose.yml
+backup/*
+node_modules
+.idea
+bower_components
+*.swp
+import/config.cfg

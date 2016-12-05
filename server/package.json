@@ -1,0 +1,23 @@
+{
+  "name": "teleinfo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Franckou31/teleinfo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Franckou31/teleinfo/issues"
+  },
+  "homepage": "https://github.com/Franckou31/teleinfo#readme"
+}

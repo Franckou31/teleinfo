@@ -277,5 +277,5 @@ if __name__ == "__main__":
             error = "Can not open file for append: %s" % options.filename
             raise TeleinfoException(error)
 
-    teleinfo = Teleinfo(gDeviceName, db_host, db_user, db_password, db_name)
+    teleinfo = Teleinfo(gDeviceName, db_host, db_user, db_pwd, db_name)
     teleinfo.run()

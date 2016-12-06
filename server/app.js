@@ -36,7 +36,7 @@ function getDateHeureFin(date) {
 }
 
 var app = express();
-app.use(express.static('/home/francky/projects/teleinfo/client/app'));
+app.use(express.static('../client/app'));
 
 app.get('/q7days', function (req, res) {
   processQuery(req, res, 6);

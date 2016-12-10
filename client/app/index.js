@@ -20,7 +20,7 @@ var couleur = {
         stack: 0,
         lines: {
           show: true,
-          fill: true,
+          fill: false,
           steps: true
         },
         bars: {
@@ -206,21 +206,38 @@ function formatData(series) {
                        ((row.JW_HC) - (prevIndice[2])) * t_jwhc +
                        ((row.JW_HP) - (prevIndice[3])) * t_jwhp +
                        ((row.JR_HC) - (prevIndice[4])) * t_jrhc +
-                       ((row.JR_HP) - (prevIndice[5])) * t_jrhp
+                       ((row.JR_HP) - (prevIndice[5])) * t_jrhp;
             couts.push([prevHour, cout]);
             prevHour = hour;
             prevIndice = [row.JB_HC, row.JB_HP, row.JW_HC, row.JW_HP, row.JR_HC, row.JR_HP];
+          }
+          else {
+            if (i == arrayLength-1) {
+              jbhc.push([parseInt(prevHour), (row.JB_HC) - (prevIndice[0])]);
+              jbhp.push([parseInt(prevHour), (row.JB_HP) - (prevIndice[1])]);
+              jwhc.push([parseInt(prevHour), (row.JW_HC) - (prevIndice[2])]);
+              jwhp.push([parseInt(prevHour), (row.JW_HP) - (prevIndice[3])]);
+              jrhc.push([parseInt(prevHour), (row.JR_HC) - (prevIndice[4])]);
+              jrhp.push([parseInt(prevHour), (row.JR_HP) - (prevIndice[5])]);
+              var cout = ((row.JB_HC) - (prevIndice[0])) * t_jbhc +
+                         ((row.JB_HP) - (prevIndice[1])) * t_jbhp +
+                         ((row.JW_HC) - (prevIndice[2])) * t_jwhc +
+                         ((row.JW_HP) - (prevIndice[3])) * t_jwhp +
+                         ((row.JR_HC) - (prevIndice[4])) * t_jrhc +
+                         ((row.JR_HP) - (prevIndice[5])) * t_jrhp;
+              couts.push([prevHour, cout]);
+            }
           }
         }
       }
       var data = [
         {label: "jbhc", data: jbhc, color: "rgba(27,119,156, 1)", lines: {show: true, fill: true, fillColor: "rgba(27,119,156, 0.6)" }},
         {label: "jbhp", data: jbhp, color: "rgba(105,187,180, 1)", lines: {show: true, fill: true, fillColor: "rgba(105,187,180, 0.6)" }},
-        {label: "jwhc", data: jwhc},
-        {label: "jwhp", data: jwhp},
-        {label: "jrhc", data: jrhc},
-        {label: "jrhp", data: jrhp},
-        {yaxis: 2, lines: {fill: false, steps: false, show: true }, data: couts},
+        {label: "jwhc", data: jwhc, color: "rgba(0, 153, 0, 1)", lines: {show: true, fill: true, fillColor: "rgba(0, 153, 0, 0.6)" }},
+        {label: "jwhp", data: jwhp, color: "rgba(255, 255, 0, 1)", lines: {show: true, fill: true, fillColor: "rgba(255, 255, 0, 0.6)" }},
+        {label: "jrhc", data: jrhc, color: "rgba(105,187,180, 1)", lines: {show: true, fill: true, fillColor: "rgba(105,187,180, 0.6)" }},
+        {label: "jrhp", data: jrhp, color: "rgba(105,187,180, 1)", lines: {show: true, fill: true, fillColor: "rgba(105,187,180, 0.6)" }},
+        {yaxis: 2, data: couts}
       ];
       var consos = [];
       period.forEach(function(element, index) {
@@ -250,7 +267,7 @@ function formatData(series) {
          couleurDuJour: couleur[lastRow.PTEC],
          couleurDemain: lastRow.DEMAIN
        }
-     };
+     }
 }
 
 function formatWeekData(series) {
@@ -331,8 +348,8 @@ function formatWeekData(series) {
       var data = [
         {label: "jbhc", data: jbhc, color: "rgba(27,119,156, 1)"},
         {label: "jbhp", data: jbhp, color: "rgba(105,187,180, 1)"},
-        {label: "jwhc", data: jwhc},
-        {label: "jwhp", data: jwhp},
+        {label: "jwhc", data: jwhc, color: "rgba(0, 153, 0, 1)"},
+        {label: "jwhp", data: jwhp, color: "rgba(255, 255, 0 1)"},
         {label: "jrhc", data: jrhc},
         {label: "jrhp", data: jrhp}/*,
         {yaxis: 2, lines: {fill: false, steps: false, show: true }, data: couts},*/

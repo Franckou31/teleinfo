@@ -85,7 +85,7 @@ class Teleinfo:
     each time all data are collected
     """
 
-    def __init__(self, device, db_host, db_user, db_password, db_name):
+    def __init__(self, device, config):
         """ @param device : teleinfo modem device path
         @param log : log instance
         @param callback : method to call each time all data are collected
@@ -93,10 +93,8 @@ class Teleinfo:
         """
         self._log = MyLogger()
         self._device = device
-        self._dbhost = db_host
-        self._dbuser = db_user
-        self._dbpassword = db_password 
-        self._dbname = db_name
+        self._config = config
+
         self._ser = None
 
     # self._stop = Event()
@@ -211,8 +209,44 @@ class Teleinfo:
         # print "computed_checksum = %s" % chr(computed_checksum)
         return chr(computed_checksum) == checksum
 
+    def sendMailAlert(self, oldColor, newColor):
+        mail_server = self._config.get('mail', 'server')
+        mail_port = self._config.get('mail', 'port')
+        mail_from = self._config.get('mail', 'from')
+        mail_to = self._config.get('mail', 'to')
+        mail_subject = self._config.get('mail', 'subject')
+        mail_message = self._config.get('mail', 'message') % (oldColor, newColor)
+
+        server = smtplib.SMTP(mail_server, mail_port)
+        server.starttls()
+        COMMASPACE = ', '
+        fromaddr = mail_from
+        toaddrs = mail_to.split(',')
+
+        msg = MIMEText(mail_message, 'plain')
+        msg['Subject'] = mail_subject
+        msg['From'] = fromaddr
+        msg['To'] = COMMASPACE.join(toaddrs)
+        server.sendmail(fromaddr, toaddrs, msg.as_string())
+        server.quit()
+
     def run(self):
-        db = MySQLdb.connect(self._dbhost, self._dbuser, self._dbpassword, self._dbname)
+        # smtp.free.fr 465 TLS
+        lastColor = 'old';
+        try:
+            f=open('/tmp/color.txt', 'r')
+            lastColor = f.read()
+            f.close()
+        except:
+            pass
+        print 'lastColor read : ' + lastColor
+
+        dbhost = self._config.get('DB', 'host')
+        dbuser = self._config.get('DB', 'user')
+        dbpwd = self._config.get('DB', 'password')
+        dbname = self._config.get('DB', 'name')
+
+        db = MySQLdb.connect(dbhost, dbuser, dbpwd, dbname)
         c = db.cursor()
 
         """ Main function
@@ -249,6 +283,21 @@ class Teleinfo:
             """insert into TELEINFO_STATS (date, annee, mois, jour, jb_hc, jb_hp, jw_hc, jw_hp, jr_hc, jr_hp, ptec, demain, iinst, papp) values (%s, %s, %s, %s, %s, %s, %s, %s, %s,  %s, %s, %s, %s, %s)""",
             (d_date + " " + d_time, d_sdate[0], d_sdate[1], d_sdate[2], d_hcjb, d_hpjb, d_hcjw, d_hpjw, d_hcjr, d_hpjr, d_ptec, d_demain, d_iinst, d_papp))
         db.commit()
+
+        colors = {'HCJB': "BLEU", "HPJB", "BLEU",
+        'HCJW': "BLANC", "HPJW", "BLANC",
+        'HCJR': "ROUGE", "HPJR", "ROUGE"}
+        newColor = colors[d_ptec]
+        print 'newColor read : ' + newColor
+        try:
+            f=open('/tmp/color.txt', 'w')
+            f.write(color)
+            f.close()
+        except:
+            pass
+        if oldColor != newColor:
+            sendMailAlert(oldColor, newColor)
+
         print >> gOutput, frameMod
         # This is the End!
         self.terminate()
@@ -260,11 +309,7 @@ class Teleinfo:
 if __name__ == "__main__":
     config = ConfigParser.ConfigParser()
     config.read('config.cfg')
-    db_host = config.get('DB', 'host')
-    db_user = config.get('DB', 'user')
-    db_pwd = config.get('DB', 'password')
-    db_name = config.get('DB', 'name')
- 
+
     usage = "usage: %prog [options]"
     parser = OptionParser(usage)
     parser.add_option("-o", "--output", dest="filename", help="append result in FILENAME")
@@ -277,5 +322,5 @@ if __name__ == "__main__":
             error = "Can not open file for append: %s" % options.filename
             raise TeleinfoException(error)
 
-    teleinfo = Teleinfo(gDeviceName, db_host, db_user, db_pwd, db_name)
+    teleinfo = Teleinfo(gDeviceName, config)
     teleinfo.run()

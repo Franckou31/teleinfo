@@ -1,4 +1,6 @@
 // Global : to change to local
+
+
 var stringDays = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 var stringMonths = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'];
 var couleur = {
@@ -41,6 +43,11 @@ var couleur = {
 
 
     var options2 = {
+        legend: {
+          backgroundColor: "#FFFFFF",
+          backgroundOpacity: 1,
+          noColumns: 2
+        },
         series: {
             stack: true,
             bars: {
@@ -56,17 +63,14 @@ var couleur = {
         },
         xaxis: {
             mode: "time",
-            //tickSize: [3, "day"],
             tickLength: 10,
             color: "black",
             axisLabel: "Date",
-            // dayNames: stringDays,
-            // monthNames: tringMonths,
             tickFormatter: getDayForWeekStat,
             axisLabelUseCanvas: true,
             axisLabelFontSizePixels: 12,
             axisLabelFontFamily: 'Verdana, Arial',
-            axisLabelPadding: 10
+            axisLabelPadding: 10,
         },
         yaxis: {
             color: "black",
@@ -74,15 +78,15 @@ var couleur = {
             axisLabelUseCanvas: true,
             axisLabelFontSizePixels: 12,
             axisLabelFontFamily: 'Verdana, Arial',
-            axisLabelPadding: 3
+            axisLabelPadding: 3,
+            max: 100000
         },
         grid: {
             hoverable: true,
             clickable: true,
-            borderWidth: 2//,
-            //backgroundColor: { colors: ["#EDF5FF", "#ffffff"] }
-        },
-        colors:["#004078","#207800", "#613C00"]
+            borderWidth: 2,
+            backgroundColor: "#5F5F5F"
+        }
     };
 
 var alreadyFetched = [];
@@ -164,7 +168,6 @@ function formatData(series) {
       // Conversion de la date UTC en GMT
       // conversion des string en int
       var yy = series.map(function(row, index){
-        row.date = toGMT(row.date);
         period.forEach(function(element){
           row[element] = parseInt(row[element]);
         });
@@ -191,9 +194,9 @@ function formatData(series) {
 
         if(i == 0) {
           prevIndice = [row.JB_HC, row.JB_HP, row.JW_HC, row.JW_HP, row.JR_HC, row.JR_HP];
-          prevHour = row.date.substring(11,13);
+          prevHour = toGMT(row.date).substring(11,13);
         } else {
-          hour = row.date.substring(11,13);
+          hour = toGMT(row.date).substring(11,13);
           if (hour != prevHour) {
             jbhc.push([parseInt(prevHour), (row.JB_HC) - (prevIndice[0])]);
             jbhp.push([parseInt(prevHour), (row.JB_HP) - (prevIndice[1])]);
@@ -230,13 +233,22 @@ function formatData(series) {
           }
         }
       }
+
+
+      // bc = rgb(0,154,191)
+      // bp = rgb(0,192,239)
+      // wc = rgb(194,125,14)
+      // wp = rgb(243,156,18)
+      // rc = rgb(177,60,46)
+      // rp = rgb(221,75,57)
+
       var data = [
-        {label: "jbhc", data: jbhc, color: "rgba(27,119,156, 1)", lines: {show: true, fill: true, fillColor: "rgba(27,119,156, 0.6)" }},
-        {label: "jbhp", data: jbhp, color: "rgba(105,187,180, 1)", lines: {show: true, fill: true, fillColor: "rgba(105,187,180, 0.6)" }},
-        {label: "jwhc", data: jwhc, color: "rgba(0, 153, 0, 1)", lines: {show: true, fill: true, fillColor: "rgba(0, 153, 0, 0.6)" }},
-        {label: "jwhp", data: jwhp, color: "rgba(255, 255, 0, 1)", lines: {show: true, fill: true, fillColor: "rgba(255, 255, 0, 0.6)" }},
-        {label: "jrhc", data: jrhc, color: "rgba(105,187,180, 1)", lines: {show: true, fill: true, fillColor: "rgba(105,187,180, 0.6)" }},
-        {label: "jrhp", data: jrhp, color: "rgba(105,187,180, 1)", lines: {show: true, fill: true, fillColor: "rgba(105,187,180, 0.6)" }},
+        {label: "jbhc", data: jbhc, color: "rgba(0,154,191, 1)", lines: {show: true, fill: true, fillColor: "rgba(0,154,191, 1)" }},
+        {label: "jbhp", data: jbhp, color: "rgba(0,192,239, 1)", lines: {show: true, fill: true, fillColor: "rgba(0,192,239, 1)" }},
+        {label: "jwhc", data: jwhc, color: "rgba(194,125,14, 1)", lines: {show: true, fill: true, fillColor: "rgba(194,125,14, 1)" }},
+        {label: "jwhp", data: jwhp, color: "rgba(243,156,18, 1)", lines: {show: true, fill: true, fillColor: "rgba(243,156,18, 1)" }},
+        {label: "jrhc", data: jrhc, color: "rgba(177,60,46, 1)", lines: {show: true, fill: true, fillColor: "rgba(177,60,46, 1)" }},
+        {label: "jrhp", data: jrhp, color: "rgba(221,75,57, 1)", lines: {show: true, fill: true, fillColor: "rgba(221,75,57, 1)" }},
         {yaxis: 2, data: couts}
       ];
       var consos = [];
@@ -346,13 +358,13 @@ function formatWeekData(series) {
       // http://www.jqueryflottutorial.com/how-to-make-jquery-flot-stacked-chart.html
 
       var data = [
-        {label: "jbhc", data: jbhc, color: "rgba(27,119,156, 1)"},
-        {label: "jbhp", data: jbhp, color: "rgba(105,187,180, 1)"},
-        {label: "jwhc", data: jwhc, color: "rgba(0, 153, 0, 1)"},
-        {label: "jwhp", data: jwhp, color: "rgba(255, 255, 0 1)"},
-        {label: "jrhc", data: jrhc},
-        {label: "jrhp", data: jrhp}/*,
-        {yaxis: 2, lines: {fill: false, steps: false, show: true }, data: couts},*/
+        {label: "jbhc", data: jbhc, color: "rgba(0,154,191, 1)", bars: {show: true, fill: true, fillColor: "rgba(0,154,191, 1)" }},
+        {label: "jbhp", data: jbhp, color: "rgba(0,192,239, 1)", bars: {show: true, fill: true, fillColor: "rgba(0,192,239, 1)" }},
+        {label: "jwhc", data: jwhc, color: "#F5F5F5", bars: {show: true, fill: true, fillColor: "#F5F5F5" }},
+        {label: "jwhp", data: jwhp, color: "#FFFFFF", bars: {show: true, fill: true, fillColor: "#FFFFFF" }},
+        {label: "jrhc", data: jrhc, color: "rgba(177,60,46, 1)", bars: {show: true, fill: true, fillColor: "rgba(177,60,46, 1)" }},
+        {label: "jrhp", data: jrhp, color: "rgba(221,75,57, 1)", bars: {show: true, fill: true, fillColor: "rgba(221,75,57, 1)" }}
+
       ];
 /*
       var consos = [];

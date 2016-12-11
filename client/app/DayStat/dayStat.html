@@ -1,6 +1,6 @@
 <div class="panel panel-success">
   <div class="panel-heading">
-    <h4 class="panel-title">Information {{ consos.infogenerale.date }} - Couleur du jour : <span class="label label-primary">{{ consos.infogenerale.couleurDuJour }}</span> - Couleur Demain : <span class="label label-primary">{{ consos.infogenerale.couleurDemain }}</span></h4>
+    <h4 class="panel-title">Information {{ consos.infogenerale.date  | date : 'EEEE d MMMM yyyy'}} <br><br> Couleur du jour : <span class="label label-primary">{{ consos.infogenerale.couleurDuJour }}</span> - Couleur Demain : <span class="label label-primary">{{ consos.infogenerale.couleurDemain }}</span></h4>
   </div>
   <div class="panel-body">
     <div class="row">
@@ -31,5 +31,8 @@
 <div class="row placeholders">
   <div ng-if="ready" class="col-md-8">
      <chart info="day1" click="plotclick"></chart>
+  </div>
+  <div class="col-md-4">
+     <span>{{debugcache}}</span>
   </div>
 </div>

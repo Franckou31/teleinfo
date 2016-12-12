@@ -17,6 +17,7 @@ var couleur = {
   var t_jwhp = 0.1585;
   var t_jrhc = 0.2402;
   var t_jrhp = 0.6207;
+
   var options = {
       series: {
         stack: 0,
@@ -89,10 +90,10 @@ var couleur = {
         }
     };
 
-var alreadyFetched = [];
 
 /**
 * reformat a tab containing stats of past nbdays days with several tabs of stats per days
+* TO BE REMOVED
 */
 function getTabSeries(series, date, nbdays) {
   var datas = [];

@@ -39,7 +39,8 @@ var app = express();
 app.use(express.static('../client/app'));
 
 app.get('/q7days', function (req, res) {
-  processQuery(req, res, 6);
+  var nbdays = parseInt(req.query.nbdays)-1;
+  processQuery(req, res, nbdays);
 });
 
 function processQuery(req, res, offset) {
@@ -53,8 +54,6 @@ function processQuery(req, res, offset) {
   var d1 = getDateHeureDebut(d, offset);
   var d2 = getDateHeureFin(d);
 
-  console.log("d1 :" + d1);
-  console.log("d2 :" + d2);
   pool.getConnection(function(err, connection) {
     connection.query({
         sql  : 'SELECT * FROM TELEINFO_STATS WHERE date > ? and date < ? order by date',

@@ -12,15 +12,19 @@ angular.module('myApp.weekStat', ['ngRoute'])
 .controller('WeekStatCtrl', ['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
   $scope.readyw = false;
   var date = $routeParams.date;
-  console.log('param!!! --' + date + '--');
-  var url = "testdata7.json";
+  var series = getStatFromCache(STAT_SEVEN, date);
 
-  //if (date != undefined && date =='today')
-  url = "q7days?d=today";
-  $http.get(url)
-    .then(function(response) {
-      var series = formatWeekData(response.data, new Date(), 6);
-      $scope.dayw = series;
-      $scope.readyw = true;
-  });
+  if (series != undefined) {
+    $scope.dayw = series;
+    $scope.readyw = true;
+  } else {
+    var url = "q7days?d=today";
+    $http.get(url)
+      .then(function(response) {
+        var series = formatWeekData(response.data, new Date(), 6);
+        setStatInCache(series, STAT_SEVEN, date);
+        $scope.dayw = series;
+        $scope.readyw = true;
+    });
+  }
 }]);

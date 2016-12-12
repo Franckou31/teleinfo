@@ -45,16 +45,23 @@ angular.module('myApp.dayStat', ['ngRoute'])
       }
     }
   };
-  $scope.ready = false;
   var date = $routeParams.date;
-  var url = "testdata.json";
-  if (date != undefined && date =='today')
-     url = "q1?d=today";
-  $http.get(url)
-    .then(function(response) {
-      var series = formatData(response.data);
-      $scope.day1 = series;
-      $scope.consos = series;
-      $scope.ready = true;
-  });
+  var series = getStatFromCache(STAT_TODAY, date);
+
+  if (series != undefined) {
+    $scope.day1 = series;
+    $scope.consos = series;
+    $scope.ready = true;
+  } else {
+    var url = "q1?d=today";
+    $scope.ready = false;
+    $http.get(url)
+      .then(function(response) {
+        var series = formatData(response.data);
+        setStatInCache(series, STAT_TODAY, date);
+        $scope.day1 = series;
+        $scope.consos = series;
+        $scope.ready = true;
+    });
+  }
 }]);

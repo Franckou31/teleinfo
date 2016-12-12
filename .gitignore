@@ -7,3 +7,4 @@ bower_components
 *.swp
 import/config.cfg
 import/testsmtp.py
+server/nohup.out

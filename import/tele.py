@@ -12,6 +12,8 @@ import logging
 import sys
 import MySQLdb
 import ConfigParser
+import smtplib
+from email.mime.text import MIMEText
 
 from optparse import OptionParser
 
@@ -284,19 +286,19 @@ class Teleinfo:
             (d_date + " " + d_time, d_sdate[0], d_sdate[1], d_sdate[2], d_hcjb, d_hpjb, d_hcjw, d_hpjw, d_hcjr, d_hpjr, d_ptec, d_demain, d_iinst, d_papp))
         db.commit()
 
-        colors = {'HCJB': "BLEU", "HPJB", "BLEU",
-        'HCJW': "BLANC", "HPJW", "BLANC",
-        'HCJR': "ROUGE", "HPJR", "ROUGE"}
+        colors = {'HCJB': "BLEU", "HPJB": "BLEU",
+        'HCJW': "BLANC", "HPJW": "BLANC",
+        'HCJR': "ROUGE", "HPJR": "ROUGE"}
         newColor = colors[d_ptec]
         print 'newColor read : ' + newColor
         try:
             f=open('/tmp/color.txt', 'w')
-            f.write(color)
+            f.write(newColor)
             f.close()
         except:
             pass
-        if oldColor != newColor:
-            sendMailAlert(oldColor, newColor)
+        if lastColor != newColor:
+            self.sendMailAlert(lastColor, newColor)
 
         print >> gOutput, frameMod
         # This is the End!

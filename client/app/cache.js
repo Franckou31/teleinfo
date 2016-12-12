@@ -8,7 +8,7 @@ function getStatFromCache(typeStat, date, nbdays) {
   if (date == undefined) {
     date = "7days";
   }
-  var key = typeStat;
+  var key = typeStat + date;
   if (nbdays != undefined) {
     key = typeStat + nbdays;
   }
@@ -27,7 +27,7 @@ function setStatInCache(series, typeStat, date, nbdays) {
   if (date == undefined) {
     date = "7days";
   }
-  var key = typeStat;
+  var key = typeStat + date;
   if (nbdays != undefined) {
     key = typeStat + nbdays;
   }

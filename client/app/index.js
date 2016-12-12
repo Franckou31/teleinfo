@@ -168,13 +168,22 @@ function formatData(series) {
 
       // Conversion de la date UTC en GMT
       // conversion des string en int
-      var yy = series.map(function(row, index){
+      series.map(function(row, index){
         period.forEach(function(element){
           row[element] = parseInt(row[element]);
         });
         return row;
       });
-
+      var keyRef = series[0].ANNEE+"-"+series[0].MOIS+"-"+series[0].JOUR;
+      var zz = series.filter(function(row,index) {
+        var key = row.ANNEE+"-"+row.MOIS+"-"+row.JOUR;
+        if (key == keyRef) {
+          return row;
+        }
+      });
+      if (zz.length < series.length) {
+        zz.push(series[zz.length]);
+      }
 
       var jbhc = [];
       var jbhp = [];
@@ -182,17 +191,14 @@ function formatData(series) {
       var jwhp = [];
       var jrhc = [];
       var jrhp = [];
-      var arrayLength = series.length;
+      var arrayLength = zz.length;
       var prevIndice = [];
       var prevHour = "xx";
       var couts = [];
       var coutTotal = 0;
 
       for (var i = 0; i < arrayLength; i++) {
-        row = series[i];
-        // console.log(row.date);
-        // console.log(toGMT(row.date));
-
+        row = zz[i];
         if(i == 0) {
           prevIndice = [row.JB_HC, row.JB_HP, row.JW_HC, row.JW_HP, row.JR_HC, row.JR_HP];
           prevHour = toGMT(row.date).substring(11,13);
@@ -254,7 +260,7 @@ function formatData(series) {
       ];
       var consos = [];
       period.forEach(function(element, index) {
-        var conso = series[arrayLength-1][element] - series[0][element];
+        var conso = zz[arrayLength-1][element] - zz[0][element];
         var cout = conso * tarifs[index];
         consos.push({conso: conso, cout: cout, label: tarifLabels[index]});
       });
@@ -264,23 +270,39 @@ function formatData(series) {
 
       var indexes = [];
 
-      var lastRow = series[series.length - 1];
+      var lastRow = zz[zz.length - 1];
       tarifLabels.forEach(function(element, index) {
 
         indexes.push({label : element, valeur: lastRow[period[index]]});
       })
 
-     return {
-       statDays: [{data: data, consos: consos}],
-       coutTotal: (coutTotal/1000).toFixed(2),
-       options: options,
-       infogenerale: {
-         date: series[series.length - 1].date,
-         index: indexes,
-         couleurDuJour: couleur[lastRow.PTEC],
-         couleurDemain: lastRow.DEMAIN
-       }
-     }
+      var result = {
+        statDays: [{data: data, consos: consos}],
+        coutTotal: (coutTotal/1000).toFixed(2),
+        options: options,
+        infogenerale: {
+          date: zz[0].date,
+          index: indexes,
+          couleurDuJour: couleur[lastRow.PTEC],
+          couleurDemain: lastRow.DEMAIN
+        }
+      };
+
+      // calcule les dates pour les liens jours suivant, jour precedent
+      var dtmp = series[0];
+      var dx = new Date();
+      var currentDay = gd(dtmp.ANNEE, dtmp.MOIS, dtmp.JOUR);
+      d_nextday = currentDay + (24 * 60 * 60 * 1000);
+      d_prevday = currentDay - (24 * 60 * 60 * 1000);
+      result.infogenerale.nextday=d_nextday;
+      result.infogenerale.prevday=d_prevday;
+      if (gd(dx.getFullYear(), dx.getMonth()+1, dx.getDate()) == currentDay) {
+        result.infogenerale.today = true;
+      } else {
+        result.infogenerale.today = false;
+      }
+
+     return result;
 }
 
 function formatWeekData(series) {

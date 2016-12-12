@@ -49,7 +49,7 @@ function processQuery(req, res, offset) {
   if (dd =='today') {
       d = new Date();
   } else {
-      d = new Date(dd);
+      d = new Date(parseInt(dd));
   }
   var d1 = getDateHeureDebut(d, offset);
   var d2 = getDateHeureFin(d);

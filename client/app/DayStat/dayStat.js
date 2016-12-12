@@ -46,6 +46,7 @@ angular.module('myApp.dayStat', ['ngRoute'])
     }
   };
   var date = $routeParams.date;
+  console.log("param: " + date);
   var series = getStatFromCache(STAT_TODAY, date);
 
   if (series != undefined) {
@@ -53,7 +54,7 @@ angular.module('myApp.dayStat', ['ngRoute'])
     $scope.consos = series;
     $scope.ready = true;
   } else {
-    var url = "q1?d=today";
+    var url = "q1?d=" + date;
     $scope.ready = false;
     $http.get(url)
       .then(function(response) {

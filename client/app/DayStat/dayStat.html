@@ -1,6 +1,10 @@
 <div class="panel panel-success">
   <div class="panel-heading">
-    <h4 class="panel-title">Information {{ consos.infogenerale.date  | date : 'EEEE d MMMM yyyy'}} <br><br> Couleur du jour : <span class="label label-primary">{{ consos.infogenerale.couleurDuJour }}</span> - Couleur Demain : <span class="label label-primary">{{ consos.infogenerale.couleurDemain }}</span></h4>
+    <h4 class="panel-title">Information {{ consos.infogenerale.date  | date : 'EEEE d MMMM yyyy'}}
+      &nbsp;&nbsp;&nbsp;<a class="btn btn-default" href="#!/dayStat/{{consos.infogenerale.prevday}}" role="button"><< Jour précédent</a>
+      &nbsp;&nbsp;&nbsp;<a ng-if="consos.infogenerale.today == false" class="btn btn-default" href="#!/dayStat/{{consos.infogenerale.nextday}}" role="button">Jour Suivant >></a>
+      <br><br>
+      Couleur du jour : <span class="label label-primary">{{ consos.infogenerale.couleurDuJour }}</span> - Couleur Demain : <span class="label label-primary">{{ consos.infogenerale.couleurDemain }}</span></h4>
   </div>
   <div class="panel-body">
     <div class="row">

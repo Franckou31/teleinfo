@@ -36,9 +36,9 @@ function getDateHeureFin(date) {
 }
 
 var app = express();
-app.use(express.static('../client/app'));
+app.use(express.static('../webpack-demo-master/dist'));
 
-app.get('/q7days', function (req, res) {
+app.get('/api/q7days', function (req, res) {
   var nbdays = parseInt(req.query.nbdays)-1;
   processQuery(req, res, nbdays);
 });
@@ -54,6 +54,8 @@ function processQuery(req, res, offset) {
   var d1 = getDateHeureDebut(d, offset);
   var d2 = getDateHeureFin(d);
 
+  console.log('process query ' + d1 + "---------" + d2);
+
   pool.getConnection(function(err, connection) {
     connection.query({
         sql  : 'SELECT * FROM TELEINFO_STATS WHERE date > ? and date < ? order by date',
@@ -61,14 +63,16 @@ function processQuery(req, res, offset) {
     }, function(err, rows, fields) {
         connection.release();
         if (!err)
-    	    res.send('The solution is: ', rows);
+    	    // res.send('The solution is: ', rows);
+          res.status(200).send(rows);
     	  else
     	    console.log('Error while performing Query.');
     });
   });
 }
 
-app.get('/q1', function (req, res) {
+app.get('/api/q1', function (req, res) {
+  console.log('REQUEST Q1');
   processQuery(req, res, 0);
 });
 

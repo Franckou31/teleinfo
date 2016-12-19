@@ -6,6 +6,8 @@ var autoprefixer = require('autoprefixer-core');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+var path = require('path');
+
 module.exports = function makeWebpackConfig (options) {
   /**
    * Environment type
@@ -127,11 +129,13 @@ module.exports = function makeWebpackConfig (options) {
     })
   }
 
+  var flot_modules_path = path.join(__dirname, 'node_modules', 'jquery-flot');
+
   config.resolve = {
     alias : {
-      "jquery.flot.time": "/home/francky/projects/teleinfo/webpack-demo-master/node_modules/jquery-flot/jquery.flot.time.js",
-      "jquery.flot.stack": "/home/francky/projects/teleinfo/webpack-demo-master/node_modules/jquery-flot/jquery.flot.stack.js",
-      "jquery.flot.resize": "/home/francky/projects/teleinfo/webpack-demo-master/node_modules/jquery-flot/jquery.flot.resize.js"
+      "jquery.flot.time": path.join(flot_modules_path, "jquery.flot.time.js"),
+      "jquery.flot.stack": path.join(flot_modules_path, "jquery.flot.stack.js"),
+      "jquery.flot.resize": path.join(flot_modules_path, "jquery.flot.resize.js")
     }
   }
 

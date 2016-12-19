@@ -39,9 +39,8 @@ function setStatInCache(series, typeStat, date, nbdays) {
 class TeleInfoCache {
   constructor() {
     this.type = {
-      STAT_TODAY  = "toDayCache";
-      STAT_SEVEN = "sevenDaysCache";
-
+      STAT_TODAY : "toDayCache",
+      STAT_SEVEN : "sevenDaysCache"
     }
   }
   setStatInCache(series, typeStat, date, nbdays) {

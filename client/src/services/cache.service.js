@@ -1,56 +1,67 @@
-import angular from 'angular';
-
-var cacheStat = {
+const cacheStat = {
 }
 
-function getStatFromCache(typeStat, date, nbdays) {
-  if (date == undefined) {
-    date = "7days";
-  }
-  var key = typeStat + date;
-  if (nbdays != undefined) {
-    key = typeStat + nbdays;
-  }
-  var result = undefined;
-  var cache = cacheStat[key];
-  if (cache != undefined) {
-    var diff = new Date().getTime() - cache.timestamp;
-    if (diff < (5*60*1000)) {
-      result = cache.cache;
+function get (key) {
+  let result
+  const cache = cacheStat[key]
+  if (cache !== undefined) {
+    const diff = new Date().getTime() - cache.timestamp
+    if (diff < (5 * 60 * 1000)) {
+      result = cache.cache
     }
   }
-  return result;
+  return result
 }
 
-function setStatInCache(series, typeStat, date, nbdays) {
-  if (date == undefined) {
-    date = "7days";
-  }
-  var key = typeStat + date;
-  if (nbdays != undefined) {
-    key = typeStat + nbdays;
-  }
+function set (key, value) {
   cacheStat[key] = {
-    timestamp : new Date().getTime(),
-    cache : series
+    timestamp: new Date().getTime(),
+    cache: value
   }
 }
 
-class TeleInfoCache {
-  constructor() {
-    this.type = {
-      STAT_TODAY : "toDayCache",
-      STAT_SEVEN : "sevenDaysCache"
-    }
+function getStatFromCache (typeStat, date, nbdays) {
+  let dateStat = date
+  if (date === undefined) {
+    dateStat = '7days'
   }
-  setStatInCache(series, typeStat, date, nbdays) {
-      setStatInCache(series, typeStat, date, nbdays);
+  let key = typeStat + dateStat
+  if (nbdays !== undefined) {
+    key = typeStat + nbdays
   }
-  getStatFromCache(typeStat, date, nbdays) {
-      return getStatFromCache(typeStat, date, nbdays);
-  }
+  let result = get(key)
+  return result
 }
 
-export default angular.module('services.teleinfo-cache', [])
-  .service('teleinfoCache', TeleInfoCache)
-  .name;
+function setStatInCache (series, typeStat, date, nbdays) {
+  let dateStat = date
+  if (date === undefined) {
+    dateStat = '7days'
+  }
+  let key = typeStat + dateStat
+  if (nbdays !== undefined) {
+    key = typeStat + nbdays
+  }
+  set(key, series)
+}
+
+export default class TeleInfoCache {
+  static type = {
+    STAT_TODAY: 'toDayCache',
+    STAT_MONTH: 'monthCache',
+    STAT_SEVEN: 'sevenDaysCache'
+  }
+
+  static setStatInCache (series, typeStat, date, nbdays) {
+    setStatInCache(series, typeStat, date, nbdays)
+  }
+  static getStatFromCache (typeStat, date, nbdays) {
+    return getStatFromCache(typeStat, date, nbdays)
+  }
+  static set (key, values) {
+    set(key, values)
+  }
+  static get (key) {
+    return get(key)
+  }
+}

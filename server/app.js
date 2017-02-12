@@ -78,10 +78,10 @@ function getDateHeureFin(date) {
 }
 
 var app = express();
-app.use(express.static('../clientReact/dist'));
+app.use(express.static('../client/dist'));
 
 app.get('/*stat/*', function (request, response){
-  response.sendFile(path.resolve(__dirname, '../clientReact/dist', 'index.html'))
+  response.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'))
 })
 
 app.get('/api/q7days', function (req, res) {

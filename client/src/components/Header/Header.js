@@ -27,21 +27,15 @@ export const Header = () => (
         </Link>
       </li>
       <li>
+        <Link to='/cloture' activeClassName='route--active'>
+        cloture
+        </Link>
+      </li>
+      <li>
         <IndexLink to='/' activeClassName='route--active'>
         Home
         </IndexLink>
       </li>
-      <li>
-        <Link to='/counter' activeClassName='route--active'>
-        Counter
-        </Link>
-      </li>
-      <li>
-        <Link to='/flotdemo' activeClassName='route--active'>
-        Flot Demo
-        </Link>
-      </li>
-
     </ul>
   </div>
 )

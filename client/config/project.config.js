@@ -25,7 +25,7 @@ const config = {
   // Server Configuration
   // ----------------------------------
   server_host : ip.address(), // use string 'localhost' to prevent exposure on local network
-  server_port : process.env.PORT || 3000,
+  server_port : process.env.PORT || 8000,
 
   // ----------------------------------
   // Compiler Configuration
@@ -62,7 +62,7 @@ const config = {
 
   proxy : {
     url: '/api',
-    target: 'http://localhost:3030',
+    target: 'http://localhost:3000',
     changeOrigin: true
   }
 }

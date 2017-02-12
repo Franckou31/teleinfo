@@ -6,6 +6,7 @@ import flotdemo from './flotdemo'
 import WeekStat from './WeekStat'
 import DayStat from './DayStat'
 import MonthStat from './MonthStat'
+import Cloture from './Cloture'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -19,6 +20,7 @@ export const createRoutes = (store) => ({
     MonthStat(store),
     WeekStat(store),
     DayStat(store),
+    Cloture(store),
     flotdemo(store)
   ]
 })

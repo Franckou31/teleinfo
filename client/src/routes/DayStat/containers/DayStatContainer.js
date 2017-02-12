@@ -3,7 +3,7 @@ import FetchComponent from '../../../components/Common/FetchComponent'
 import { formatDayData } from '../../../services/teleinfoData.service'
 import TeleInfoCache from '../../../services/cache.service'
 import DayGraph from './DayGraph'
-import DayIndex from './DayIndex'
+import DayInfos from './DayInfos'
 
 export default class DayStat extends FetchComponent {
   static propTypes = {
@@ -35,7 +35,7 @@ export default class DayStat extends FetchComponent {
       console.log('Day Stat render 1')
       return (
         <div>
-          <DayIndex data={this.data} />
+          <DayInfos data={this.data} />
           <div className='row placeholders'>
             <div className='col-md-8'>
               <DayGraph data={this.data} />
